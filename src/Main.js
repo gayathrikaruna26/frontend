@@ -54,10 +54,10 @@ async function getAllUserData() {
             <TableHead>
               <TableRow>
                 <TableCell>Id</TableCell>
-                <TableCell align="left">First Name</TableCell>
-                <TableCell align="left">Last Name</TableCell>
-                <TableCell align="left">Email</TableCell>
-                <TableCell align="center">Gender</TableCell>
+                <TableCell align="left">UserName</TableCell>
+                <TableCell align="left">FirstName</TableCell>
+                <TableCell align="left">Role</TableCell>
+                <TableCell align="center">Grade</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
