@@ -21,7 +21,6 @@ function LoginParent() {
   const [password, setPassword] = useState("");
   const [loginClick, setLoginClick] = useState(true);
   const [forgotPasswordClick, setForgotPasswordClick] = useState(false);
-  const [newUserClick, setNewUserForm] = useState(false);
   const [newPass, setNewPass] = useState("");
   const [conformPass, setConformPass] = useState("");
 
@@ -60,17 +59,6 @@ function LoginParent() {
       } else if (newPass === conformPass) {
         alert("password updated Sucessful");
       }
-    }
-  }
-
-  function UpdatePassword() {
-    try {
-      axios.put("http://localhost:9001/UpdatePasswordApi", {
-        userName: userName,
-        password: password,
-      });
-    } catch (error) {
-
     }
   }
 
@@ -194,15 +182,6 @@ function LoginParent() {
                       Forgot password?
                     </Link>
                   </Grid>
-                  <Grid item>
-                    <Link
-                      onClick={() => handleClick("SignUp")}
-                      variant="body2"
-                      component={Button}
-                    >
-                      {"Don't have an account? Sign Up"}
-                    </Link>
-                  </Grid>
                 </Grid>
               </Box>
             </Box>
@@ -278,15 +257,6 @@ function LoginParent() {
                       component={Button}
                     >
                       Existing User? Sign In
-                    </Link>
-                  </Grid>
-                  <Grid item>
-                    <Link
-                      onClick={() => handleClick("SignUp")}
-                      variant="body2"
-                      component={Button}
-                    >
-                      Don't have an account? Sign Up
                     </Link>
                   </Grid>
                 </Grid>
