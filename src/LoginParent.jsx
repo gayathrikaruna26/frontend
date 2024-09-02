@@ -13,13 +13,15 @@ import {
 import { grey } from "@mui/material/colors";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import React, { useState } from "react";
-import axios from "axios";
-
-
+import Main from "./Main"; 
+import { Container } from "@mui/system";
 function LoginParent() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState('');
   const [loginClick, setLoginClick] = useState(true);
+  const [loginShow,setLoginShow]= useState(true);
+  const [showTable,setShowTable]= useState(false);
   const [forgotPasswordClick, setForgotPasswordClick] = useState(false);
   const [newPass, setNewPass] = useState("");
   const [conformPass, setConformPass] = useState("");
@@ -29,7 +31,10 @@ function LoginParent() {
       setUserName(data);
     } else if (value === "password") {
       setPassword(data);
-    } else if (value === "NewPassword") {
+    } else if (value === "role"){
+      setRole(data);
+    } 
+    else if (value === "NewPassword") {
       setNewPass(data);
     } else if (value === "ConformPassword") {
       setConformPass(data);
@@ -43,7 +48,7 @@ function LoginParent() {
     } else if (password === "") {
       alert("password field is Empty");
     } else if (userName && password) {
-      CheckUser(userName, password);
+      CheckUser(userName, password,role);
     }
   }
 
@@ -62,25 +67,28 @@ function LoginParent() {
     }
   }
 
-  function CheckUser(name, pass) {
-    try {
-      axios
-        .post("http://localhost:9001/CheckLogin", {
-          userName: name,
-          password: pass,
-        })
-        .then((response) => {
-          if (response.data.message === "User Found") {
-            alert("login Sucess");
-            loginSuccess();
-          } else if (response.data.message === "User Not Found") {
-            alert("user unavailable ");
-          }
-        });
-    } catch (error) {
-      console.error(error);
-    }
-  }
+async function CheckUser(name, pass, role) {
+  const data = { userName: name, password: pass, Role: role };
+  await fetch("http://localhost:8001/CheckLogin", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },  
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.message === "User Found") {
+        alert("login Success");
+        loginSuccess();
+      } else if (data.message === "User Not Found") {
+        alert("user unavailable");
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
 
   function handleClick(key) {
     if (key === "SignIn") {
@@ -94,11 +102,13 @@ function LoginParent() {
   }
 
   function loginSuccess(){
-    
+    setLoginShow(false)
+    setShowTable(true);
   }  
 
   return (
-    <Paper elevation={6} sx={{ m: 10 }}>
+    <>
+   {loginShow && ( <Paper elevation={6} sx={{ m: 10 }}>
       <Grid container component="main">
         <Grid
           item
@@ -159,6 +169,16 @@ function LoginParent() {
                   onChange={(e) => handleChange("password", e.target.value)}
                   value={password}
                   autoComplete="current-password"
+                />
+                <TextField
+                  margin="normal"
+                  fullWidth
+                  name="role"
+                  label="Role"
+                  id="role"
+                  onChange={(e) => handleChange("role", e.target.value)}
+                  value={role}
+                  autoComplete="role"
                 />
                 <FormControlLabel
                   control={<Checkbox value="remember" color="primary" />}
@@ -265,7 +285,9 @@ function LoginParent() {
           )}
         </Grid>
       </Grid>
-    </Paper>
+    </Paper>)}
+    {showTable &&(<Main/>)}
+    </>
   );
 }
 
